@@ -2,9 +2,9 @@
 
 **Fruit Fly × Crab Robot**
 
-冻结的果蝇连接组在浏览器里驱动一台 22 自由度仿真螃蟹，穿过管道。界面可在中文和英文之间切换。
+目前是在探索主动式 AI：冻结的果蝇连接组在浏览器里自己读取场地，驱动一台 22 自由度仿真螃蟹穿过管道。界面可在中文和英文之间切换。
 
-A frozen fruit-fly connectome runs in the browser and drives a simulated 22-DoF crab through pipes. The page itself switches between Chinese and English.
+This stage explores proactive AI. A frozen fruit-fly connectome runs in the browser, reads the arena on its own, and drives a simulated 22-DoF crab through pipes. The page itself switches between Chinese and English.
 
 [中文](#中文) · [English](#english)
 
@@ -22,7 +22,7 @@ A frozen fruit-fly connectome runs in the browser and drives a simulated 22-DoF 
 
 ### 这是什么
 
-这是一个在浏览器里完成的神经计算演示，不是真实果蝇在控制机器人。
+目前是在探索主动式 AI。这是一个在浏览器里完成的神经计算演示：连接组自己读场地、自己决定起跳，人不操作。它不是真实果蝇在控制机器人。
 
 1. 场地状态被编成果蝇视觉神经元的输入。
 2. MaleCNS v1.0 雄性果蝇连接组在 Web Worker 里以 50 Hz 更新。
@@ -147,7 +147,7 @@ The running view: fly-brain activity on the left, the crab arena in the center, 
 
 ### What this is
 
-A neuroscience demo that runs entirely in the browser. It is not a real fly controlling a robot.
+This stage explores proactive AI. It is a neuroscience demo that runs entirely in the browser: the connectome reads the arena and decides when to jump, without a person at the controls. It is not a real fly controlling a robot.
 
 1. The arena is encoded as input to fruit-fly visual neurons.
 2. The MaleCNS v1.0 male connectome steps at 50 Hz inside a Web Worker.

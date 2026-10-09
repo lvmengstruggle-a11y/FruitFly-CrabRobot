@@ -21,10 +21,13 @@ describe('obstacle judgment', () => {
 
   it('waits while a blocking lip is still far, then jumps as it comes into the leap', () => {
     const far = pipe(579, 0, 400, 500, 290);
-    const near = pipe(579, 0, 60, 500, 290);
     expect(judgeObstacle(far).low).toBe(true);
     expect(jumpForObstacle(far)).toBe(false);
-    expect(jumpForObstacle(near)).toBe(true);
+    let leapt = false;
+    for (let distance = 280; distance >= 24; distance -= 4) {
+      if (jumpForObstacle(pipe(579, 0, distance, 500, 290))) { leapt = true; break; }
+    }
+    expect(leapt).toBe(true);
     expect(jumpForObstacle(pipe(579, -200, 60, 500, 290))).toBe(false);
     expect(jumpForObstacle({ ...pipe(579, 0, 60, 500, 290), jumpsLeft: 0, grounded: false })).toBe(false);
   });

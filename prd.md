@@ -1,6 +1,6 @@
-# Fly Brain Flappy Bird PRD
+# 果蝇大脑 × 螃蟹机器人 PRD
 
-> **让一只真实果蝇 Connectome 自己挑战 Flappy Bird。**
+> **目前是在探索主动式 AI：冻结果蝇 Connectome 自己读取场地，驱动一台仿真螃蟹穿过管道。**
 
 ---
 
@@ -8,27 +8,27 @@
 
 ### 1.1 项目名称
 
-**Fly Brain Flappy Bird**
+**Fruit Fly × Crab Robot**
 
-中文名可暂定：
+中文名：
 
-**《果蝇大脑玩 Flappy Bird》**
+**《果蝇大脑 × 螃蟹机器人》**
 
 ### 1.2 项目定位
 
-这是一个基于 `fly.ai` 果蝇 Connectome 的纯前端神经科学小游戏。
+目前是在探索主动式 AI。
 
-项目不是让玩家自己玩 Flappy Bird，而是：
+这是一个基于 `fly.ai` 果蝇 Connectome 的纯前端神经科学实验。螃蟹自己读取管道场地、自己决定起跳或等待，人不操作。
 
-> 将 Flappy Bird 当前环境编码成果蝇能够接收的神经刺激，让果蝇 Connectome 自己产生神经活动，再根据输出神经活动决定是否拍翅膀。
+> 将管道场地编码成果蝇能够接收的神经刺激，让果蝇 Connectome 自己产生神经活动，再根据输出神经活动决定螃蟹起跳还是等待。
 
 用户的主要行为是：
 
-**观察一只果蝇的大脑如何尝试自己玩 Flappy Bird。**
+**观察果蝇大脑如何自己驱动螃蟹穿过管道。**
 
 核心体验同时包含：
 
-- Flappy Bird 游戏
+- 螃蟹穿过管道
 - 果蝇 Connectome 模拟
 - 神经活动实时可视化
 - 感觉神经输入
@@ -45,7 +45,7 @@
 实现一个可以直接在浏览器运行的实验型网站：
 
 ```text
-Flappy Bird Environment
+Pipe Arena
           ↓
      Fly Encoder
           ↓
@@ -57,9 +57,9 @@ Sensory / Visual Neurons
           ↓
      Fly Decoder
           ↓
-      FLAP / WAIT
+     JUMP / WAIT
           ↓
-    Flappy Bird
+   Crab Robot
 ```
 
 游戏全过程不需要用户控制。
@@ -108,8 +108,8 @@ Optional Readout
 禁止使用：
 
 ```javascript
-if (bird.y > gapCenter) {
-    bird.flap();
+if (crab.y > gapCenter) {
+    crab.jump();
 }
 ```
 
@@ -177,7 +177,7 @@ compressed sparse weights
 
 整个网站围绕一个问题：
 
-> **真实果蝇的大脑结构，能不能学会/完成 Flappy Bird？**
+> **真实果蝇的大脑结构，能不能自己驱动螃蟹穿过管道？**
 
 网站不是传统游戏，而是：
 
@@ -200,33 +200,25 @@ Neuroscience Visualization
 ↓
 Descending Neuron 激活
 ↓
-果蝇决定拍翅膀
+螃蟹决定起跳
 ↓
 成功 / 撞墙
 ```
 
 ---
 
-# 6. 游戏角色
+# 6. 场地角色
 
-Flappy Bird 原版中的 Bird 改成果蝇。
+场地里的行动者是仿真螃蟹 **Jumper**。它有 22 个自由度，站姿和连杆长度来自它的 MJCF。
 
-建议使用：
-
-```text
-🪰
-```
-
-或自制像素果蝇 Sprite。
-
-游戏世界仍然保持经典结构：
+螃蟹在沙地上横着爬。开口够大就爬过去，下沿挡路时起跳。起跳来自连接组解码，不是玩家按键。
 
 ```text
         PIPE
        █████
        █████
 
-🪰 →
+🦀 →
 
        GAP
 
@@ -243,35 +235,17 @@ Flappy Bird 原版中的 Bird 改成果蝇。
 - 角色系统
 - 复杂关卡
 
-保持 Flappy Bird 最基本玩法。
-
 ---
 
 # 7. 游戏规则
 
-## 7.1 基础物理
+## 7.1 螃蟹运动
 
-果蝇拥有：
+螃蟹在沙地上横着爬，用腿探管沿。
 
-```text
-positionY
-velocityY
-gravity
-flapForce
-```
+开口够大时爬过去。下沿挡路时起跳。loom 下行神经元放电、还没决定起跳时，它会停住，也可以倒退。
 
-每帧：
-
-```text
-velocityY += gravity
-positionY += velocityY
-```
-
-执行 FLAP：
-
-```text
-velocityY = -flapForce
-```
+同一段腾空最多起跳三次，下一次必须等脚落地。身体已经在目标上方时不再起跳，正在快速上升时不再连跳。
 
 ---
 
@@ -304,7 +278,7 @@ spawnInterval
 
 ## 7.3 得分
 
-果蝇成功通过一组水管：
+螃蟹成功通过一组管道：
 
 ```text
 Score +1
@@ -323,10 +297,9 @@ SCORE 12
 以下情况死亡：
 
 ```text
-撞上上水管
-撞上下水管
-撞上地面
-飞出顶部边界
+起跳太早
+没有起跳
+冲过缺口
 ```
 
 死亡后：
@@ -386,9 +359,9 @@ Fly Encoder 负责：
 结构：
 
 ```text
-Flappy State
+Arena State
       ↓
-FlappyEncoder
+ArenaEncoder
       ↓
 Neural Stimulus
 ```
@@ -618,7 +591,7 @@ abs(velocityY) / MAX_VELOCITY
 最终：
 
 ```text
-                 Flappy State
+                 Arena State
                        │
          ┌─────────────┼──────────────┐
          │             │              │
@@ -701,7 +674,7 @@ PURE BRAIN
 
 模式原则：
 
-> 不训练任何 Flappy Bird 输出模型。
+> 不训练任何管道穿越的输出模型。
 
 直接观察 Descending Neurons。
 
@@ -714,7 +687,7 @@ DNp01
 将其作为：
 
 ```text
-take-off / escape / flap
+take-off / escape / jump
 ```
 
 候选运动输出。
@@ -765,7 +738,7 @@ WAIT
 
 ---
 
-# 18. 防止连续拍翅
+# 18. 防止连续起跳
 
 加入：
 
@@ -1012,15 +985,15 @@ FLAP
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ FLY BRAIN PLAYS FLAPPY BIRD                                 │
+│ A FLY BRAIN CONTROLS THE CRAB                               │
 │ 166,700 neurons · ~25.6M connections                        │
 ├────────────────┬───────────────────────┬─────────────────────┤
 │                │                       │                     │
-│   FLY BRAIN    │      FLAPPY BIRD      │    NEURAL DATA      │
+│   FLY BRAIN    │      CRAB ARENA       │    NEURAL DATA      │
 │                │                       │                     │
 │     ·●·        │         ████          │ LC4     ███████     │
 │   ●····●       │                       │ LPLC2   █████       │
-│  ···●···       │   🪰       GAP        │ LC10-L  ██          │
+│  ···●···       │   🦀       GAP        │ LC10-L  ██          │
 │    ●··●        │                       │ LC10-R  ███████     │
 │                │         ████          │                     │
 │ 166,700        │                       │ DNp01   █████████   │
@@ -1041,13 +1014,13 @@ FLAP
 显示：
 
 ```text
-🪰 FLY BRAIN PLAYS FLAPPY BIRD
+🪰→🦀 A FLY BRAIN CONTROLS THE CRAB
 ```
 
 副标题：
 
 ```text
-A real fruit fly connectome attempts Flappy Bird.
+A frozen fruit-fly connectome drives a crab robot through pipes on its own.
 ```
 
 再显示：
@@ -1156,7 +1129,7 @@ Brain Map：
 
 ---
 
-# 30. Flappy Bird Panel
+# 30. 螃蟹场地
 
 中间区域为游戏。
 
@@ -1175,10 +1148,9 @@ Canvas：
 显示：
 
 ```text
-果蝇
-水管
-天空
-地面
+螃蟹
+管道
+沙地
 当前 Score
 ```
 
@@ -1632,11 +1604,9 @@ Canvas 2D
 文件：
 
 ```text
-FlappyGame.ts
-Bird.ts
+CrabRobot.ts
 Pipe.ts
 Collision.ts
-Physics.ts
 ```
 
 ---
@@ -1743,7 +1713,7 @@ MOTOR COMMAND
 FLAP ↑
 ```
 
-果蝇执行拍翅。
+螃蟹起跳。
 
 ---
 
@@ -1776,7 +1746,7 @@ Output
 显示：
 
 ```text
-FLY #42 DIED
+CRAB #42 STOPPED
 ```
 
 统计：
@@ -1828,19 +1798,19 @@ DNp01
 ```text
 CAUSE OF DEATH
 
-THE FLY DID NOT FLAP.
+THE CRAB DID NOT JUMP.
 ```
 
 或者：
 
 ```text
-THE FLY FLAPPED TOO EARLY.
+THE CRAB JUMPED TOO EARLY.
 ```
 
 或者：
 
 ```text
-THE FLY PANICKED.
+THE CRAB OVERSHOT THE GAP.
 ```
 
 这些只属于娱乐性描述。
@@ -2220,7 +2190,7 @@ THIS DEVICE CANNOT RUN THE FULL FLY BRAIN IN REAL TIME.
 布局变成：
 
 ```text
-FLAPPY BIRD
+螃蟹场地
 
 ↓
 
@@ -2364,7 +2334,7 @@ ERROR
 推荐：
 
 ```text
-fly-flappy/
+FruitFly&CrabRobot/
 │
 ├── index.html
 ├── package.json
@@ -2392,12 +2362,9 @@ fly-flappy/
     ├── App.ts
     │
     ├── game/
-    │   ├── FlappyGame.ts
-    │   ├── Bird.ts
+    │   ├── CrabRobot.ts
     │   ├── Pipe.ts
-    │   ├── Physics.ts
-    │   ├── Collision.ts
-    │   └── GameState.ts
+    │   └── Collision.ts
     │
     ├── brain/
     │   ├── FlyBrain.ts
@@ -2438,7 +2405,7 @@ fly-flappy/
 # 73. FlyEncoder 接口
 
 ```typescript
-interface FlappyState {
+interface ArenaState {
     birdY: number;
     birdVelocityY: number;
 
@@ -2562,7 +2529,7 @@ cooldown
 符合条件：
 
 ```text
-bird.flap()
+crab.jump()
 ```
 
 ---
@@ -2570,9 +2537,9 @@ bird.flap()
 # 77. Pure Brain 数据流
 
 ```text
-Bird + Pipe
+Crab + Pipe
      ↓
-FlappyState
+ArenaState
      ↓
 FlyEncoder
      ↓
@@ -2592,9 +2559,9 @@ FLAP / WAIT
 # 78. Trained Readout 数据流
 
 ```text
-Bird + Pipe
+Crab + Pipe
      ↓
-FlappyState
+ArenaState
      ↓
 FlyEncoder
      ↓
@@ -2618,7 +2585,7 @@ FLAP / WAIT
 实现：
 
 ```text
-Flappy Bird
+螃蟹穿过管道
 ```
 
 验证：
@@ -2722,8 +2689,8 @@ Caching
 
 第一版必须包含：
 
-- 纯前端 Flappy Bird
-- 像素果蝇角色
+- 纯前端螃蟹场地
+- 22 自由度仿真螃蟹
 - fly.ai Connectome
 - 完整 Connectome 浏览器加载
 - Web Worker 模拟
@@ -2781,7 +2748,7 @@ MVP 完成后，可以继续实验：
 即：
 
 ```text
-Flappy Bird pixels
+场地画面 pixels
 ↓
 Fly visual field
 ↓
@@ -2817,16 +2784,16 @@ Descending neurons
 ```text
 The connectome is derived from fruit-fly neural connectivity.
 
-Flappy Bird sensory encoding and motor decoding are artificial experimental interfaces.
+Pipe-arena sensory encoding and motor decoding are artificial experimental interfaces.
 ```
 
 避免宣传成：
 
-> 一只真实果蝇天然知道怎么玩 Flappy Bird。
+> 一只真实果蝇天然知道怎么让螃蟹穿过管道。
 
 准确表达应该是：
 
-> **我们把 Flappy Bird 环境编码成果蝇神经刺激，让真实果蝇 Connectome 的神经活动参与游戏决策。**
+> **我们把管道场地编码成果蝇神经刺激，让真实果蝇 Connectome 的神经活动决定螃蟹起跳还是等待。**
 
 ---
 
@@ -2836,7 +2803,7 @@ Flappy Bird sensory encoding and motor decoding are artificial experimental inte
 
 ```text
 A FLY BRAIN
-PLAYS FLAPPY BIRD
+CONTROLS THE CRAB
 ```
 
 副标题：
@@ -2858,7 +2825,7 @@ WAKE UP FLY
 死亡：
 
 ```text
-FLY #42 DIED
+CRAB #42 STOPPED
 ```
 
 重新开始：
@@ -2956,7 +2923,7 @@ SCORE 1
 ```text
 💥
 
-FLY #1 DIED
+CRAB #1 STOPPED
 
 SCORE
 3
@@ -2969,7 +2936,7 @@ TOTAL SPIKES
 
 CAUSE OF DEATH
 
-THE FLY DID NOT FLAP.
+THE CRAB DID NOT JUMP.
 
 [ REVIVE FLY ]
 ```
@@ -2977,12 +2944,12 @@ THE FLY DID NOT FLAP.
 用户重新启动：
 
 ```text
-FLY #2
+CRAB #2
 ```
 
 由于神经噪声：
 
-第二只果蝇可能获得：
+下一只螃蟹可能获得：
 
 ```text
 SCORE 8
@@ -2990,7 +2957,7 @@ SCORE 8
 
 最终形成一个可以一直观看的：
 
-> **真实果蝇 Connectome × Flappy Bird 神经科学实验玩具。**
+> **真实果蝇 Connectome 自己驱动仿真螃蟹穿过管道。目前是在探索主动式 AI。**
 
 ---
 
@@ -3006,7 +2973,7 @@ SCORE 8
         │                             │
         │                        Fly Connectome
         │                             │
-  FlappyGame                         LIF
+  CrabArena                          LIF
         │                             │
   Game State ────────► FlyEncoder     │
         │                             │
@@ -3058,7 +3025,7 @@ Connectome static assets
 **游戏层：**
 
 ```text
-果蝇能够自动进行 Flappy Bird 游戏
+螃蟹能够自己穿过管道
 ```
 
 **Connectome 层：**
@@ -3088,7 +3055,7 @@ FLAP / WAIT 必须来源于 Connectome 输出活动
 **性能层：**
 
 ```text
-Connectome 计算不能明显阻塞 Flappy Bird UI
+Connectome 计算不能明显阻塞螃蟹场地
 ```
 
 **架构层：**
@@ -3105,4 +3072,4 @@ Connectome 计算不能明显阻塞 Flappy Bird UI
 
 # 88. 一句话产品定义
 
-> **Fly Brain Flappy Bird 是一个将 Flappy Bird 环境编码成果蝇感觉神经刺激、通过 fly.ai 的冻结果蝇 Connectome 传播神经活动，并从 Descending Neurons 解码 FLAP / WAIT 动作的纯前端神经科学小游戏。**
+> **《果蝇大脑 × 螃蟹机器人》目前是在探索主动式 AI。它把管道场地编码成果蝇感觉神经刺激，通过 fly.ai 的冻结果蝇 Connectome 传播神经活动，并从 Descending Neurons 解码起跳或等待，驱动一台 22 自由度仿真螃蟹。人不操作。**
