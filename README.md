@@ -12,6 +12,14 @@ A frozen fruit-fly connectome runs in the browser and drives a simulated 22-DoF 
 
 ## 中文
 
+运行中的界面：左边是果蝇大脑活动，中间是螃蟹场地，右边是神经数据。
+
+![果蝇大脑驱动螃蟹穿过管道](docs/images/running-zh.png)
+
+连接组加载完成后，点击「唤醒果蝇」开始一局。
+
+![连接组加载完成，等待唤醒果蝇](docs/images/ready-zh.png)
+
 ### 这是什么
 
 这是一个在浏览器里完成的神经计算演示，不是真实果蝇在控制机器人。
@@ -132,6 +140,10 @@ MaleCNS v1.0 连接组数据为 CC BY 4.0。本仓库目前没有单独的代码
 ---
 
 ## English
+
+The running view: fly-brain activity on the left, the crab arena in the center, and neural data on the right.
+
+![A fruit-fly brain driving a crab robot through pipes](docs/images/running-en.png)
 
 ### What this is
 
